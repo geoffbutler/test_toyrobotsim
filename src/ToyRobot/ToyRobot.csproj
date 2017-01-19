@@ -43,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.Commands.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Constants.Facing.cs" />
+    <Compile Include="Constants.Turns.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToyRobotSimulator.cs" />

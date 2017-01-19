@@ -4,45 +4,7 @@ using System.Linq;
 namespace ToyRobot
 {
     public class ToyRobotSimulator
-    {
-        public static class Constants
-        {
-            public const int MinX = 0;
-            public const int MaxX = 4;
-            public const int MinY = 0;
-            public const int MaxY = 4;
-
-            public static class Facing
-            {
-                public const string North = "NORTH";
-                public const string South = "SOUTH";
-                public const string East = "EAST";
-                public const string West = "WEST";
-            }
-
-            public static class Turns
-            {
-                public const string Left = "LEFT";
-                public const string Right = "RIGHT";
-            }
-
-            public static readonly string[] ValidFacing = { Facing.North, Facing.South, Facing.East, Facing.West };
-            public static readonly string[] ValidTurns = { Turns.Left, Turns.Right };
-
-            public static class Commands
-            {
-                public static readonly char[] CommandsDelim = new char[] { ' ' };
-
-                public const string Place = "PLACE";
-                public static readonly char[] PlaceParamsDelim = new char[] { ',' };
-                public static readonly string PlaceParamsFormat = "{0},{1},{2}"; // X,Y,Facing                
-
-                public const string Report = "REPORT";
-                public const string Move = "MOVE";
-            }
-        }
-
-
+    {        
         public bool Placed { get; private set; }
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -80,47 +42,54 @@ namespace ToyRobot
             }
         }
 
+
         private void Turn(string direction)
         {
             switch (direction)
             {
                 case Constants.Turns.Left:
-                    {
-                        switch (Facing)
-                        {
-                            case Constants.Facing.North:
-                                Facing = Constants.Facing.West;
-                                break;
-                            case Constants.Facing.West:
-                                Facing = Constants.Facing.South;
-                                break;
-                            case Constants.Facing.South:
-                                Facing = Constants.Facing.East;
-                                break;
-                            case Constants.Facing.East:
-                                Facing = Constants.Facing.North;
-                                break;
-                        }
-                    }
+                    TurnLeft();
                     break;
                 case Constants.Turns.Right:
-                    {
-                        switch (Facing)
-                        {
-                            case Constants.Facing.North:
-                                Facing = Constants.Facing.East;
-                                break;
-                            case Constants.Facing.East:
-                                Facing = Constants.Facing.South;
-                                break;
-                            case Constants.Facing.South:
-                                Facing = Constants.Facing.West;
-                                break;
-                            case Constants.Facing.West:
-                                Facing = Constants.Facing.North;
-                                break;
-                        }
-                    }
+                    TurnRight();
+                    break;
+            }
+        }
+
+        private void TurnLeft()
+        {
+            switch (Facing)
+            {
+                case Constants.Facing.North:
+                    Facing = Constants.Facing.West;
+                    break;
+                case Constants.Facing.West:
+                    Facing = Constants.Facing.South;
+                    break;
+                case Constants.Facing.South:
+                    Facing = Constants.Facing.East;
+                    break;
+                case Constants.Facing.East:
+                    Facing = Constants.Facing.North;
+                    break;
+            }
+        }
+
+        private void TurnRight()
+        {
+            switch (Facing)
+            {
+                case Constants.Facing.North:
+                    Facing = Constants.Facing.East;
+                    break;
+                case Constants.Facing.East:
+                    Facing = Constants.Facing.South;
+                    break;
+                case Constants.Facing.South:
+                    Facing = Constants.Facing.West;
+                    break;
+                case Constants.Facing.West:
+                    Facing = Constants.Facing.North;
                     break;
             }
         }
