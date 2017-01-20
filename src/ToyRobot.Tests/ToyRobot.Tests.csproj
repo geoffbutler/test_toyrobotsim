@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestCase.cs" />
+    <Compile Include="ToyRobotSimulatorShould.Messages.cs" />
     <Compile Include="ToyRobotSimulatorShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

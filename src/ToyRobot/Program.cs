@@ -8,6 +8,8 @@ namespace ToyRobot
         {
             var toyRobot = new ToyRobotSimulator();
 
+            toyRobot.ShowWelcomeMessage();            
+
             string command;
             do
             {

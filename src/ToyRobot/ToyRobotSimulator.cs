@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ToyRobot
@@ -10,38 +11,57 @@ namespace ToyRobot
         public int Y { get; private set; }
         public string Facing { get; private set; }
         public string LastReport { get; private set; }
+        public string LastMessage { get; private set; }
 
-
+        public void ShowWelcomeMessage()
+        {
+            ShowMessage(Messages.WelcomeMessage);
+        }
+        
         public void Do(string commandText)
         {
             string[] commands = commandText.Split(Constants.Commands.CommandsDelim, StringSplitOptions.RemoveEmptyEntries);
 
-            if (commands.Length == 2 && commands[0] == Constants.Commands.Place)
+            var command = commands[0].ToUpper(); // ignore case
+
+            if (commands.Length == 2 && command == Constants.Commands.Place)
             {
                 Place(commands);
                 return;
             }
 
+            if (commands.Length != 1 || !Constants.ValidSingleWordCommands.Contains(command))
+            {
+                ShowMessage(Messages.ErrorInvalidCommandMessage); // must be invalid
+                return;
+            }
+
             if (!Placed)
+            {
+                ShowMessage(Messages.ErrorNotPlacedMessage);
                 return; // must be placed first
+            }
 
-            if (commands.Length != 1)
-                return; // can't be valid
-
-            if (commands[0] == Constants.Commands.Report)
+            if (command == Constants.Commands.Report)
             {
                 Report();
             }
-            else if (commands[0] == Constants.Commands.Move)
+            else if (command == Constants.Commands.Move)
             {
                 Move();
             }
-            else if (Constants.ValidTurns.Contains(commands[0]))
+            else if (Constants.ValidTurns.Contains(command))
             {
-                Turn(commands[0]);
+                Turn(command);
             }
-        }
+        }        
 
+        private void ShowMessage(string message)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine();
+            LastMessage = message;
+        }
 
         private void Turn(string direction)
         {
@@ -96,41 +116,60 @@ namespace ToyRobot
 
         private void Report()
         {
-            var message = string.Format(Constants.Commands.PlaceParamsFormat, X, Y, Facing);
-            Console.WriteLine(message);
-            LastReport = message;
+            var report = string.Format(Constants.Commands.PlaceParamsFormat, X, Y, Facing);
+            Console.WriteLine(report);
+            LastReport = report;
         }
 
-        private void Place(string[] commands)
+        private bool Place(string[] commands)
         {
             var parts = commands[1].Split(Constants.Commands.PlaceParamsDelim, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length != 3)
-                return; // ignore invalid input
+            {
+                ShowMessage(Messages.ErrorInvalidPlaceCommandSyntax); // must be invalid
+                return false;
+            }
 
             var inputX = parts[0];
             var inputY = parts[1];
-            var inputFacing = parts[2];
+            var inputFacing = parts[2].ToUpper(); // ignore case
 
             // ignore invalid input
             int x, y;
             if (!int.TryParse(inputX, out x))
-                return;
+            {
+                ShowMessage(Messages.ErrorInvalidPlaceCommandXUnparsable);
+                return false;
+            }
             if (!int.TryParse(inputY, out y))
-                return;
+            {
+                ShowMessage(Messages.ErrorInvalidPlaceCommandYUnparsable);
+                return false;
+            }
             if (!Constants.ValidFacing.Contains(inputFacing))
-                return;
+            {
+                ShowMessage(Messages.ErrorInvalidPlaceCommandFUnparsable);
+                return false;
+            }
 
             // only place if coords on the board
             if (x < Constants.MinX || x > Constants.MaxX)
-                return;
+            {
+                ShowMessage(Messages.ErrorInvalidPlaceCommandXOutOfRange);
+                return false;
+            }
             if (y < Constants.MinY || y > Constants.MaxY)
-                return;
+            {
+                ShowMessage(Messages.ErrorInvalidPlaceCommandYOutOfRange);
+                return false;
+            }
 
             X = x;
             Y = y;
             Facing = inputFacing;
 
             Placed = true;
+            return true; // input was good
         }
 
         private void Move()
@@ -138,20 +177,16 @@ namespace ToyRobot
             switch (Facing)
             { // only move if we don't fall off the board
                 case Constants.Facing.North:
-                    if ((Y + 1) <= Constants.MaxY)
-                        Y++;
+                    Y = ((Y + 1) <= Constants.MaxY ? ++Y : Y);                    
                     break;
                 case Constants.Facing.South:
-                    if ((Y - 1) >= Constants.MinY)
-                        Y--;
+                    Y = ((Y - 1) >= Constants.MinY ? --Y : Y);                    
                     break;
                 case Constants.Facing.East:
-                    if ((X - 1) >= Constants.MinX)
-                        X--;
+                    X = ((X - 1) >= Constants.MinX ? --X : X);                    
                     break;
                 case Constants.Facing.West:
-                    if ((X + 1) <= Constants.MaxX)
-                        X++;
+                    X = ((X + 1) <= Constants.MaxX ? ++X : X);                    
                     break;
             }
         }

@@ -14,5 +14,7 @@ namespace ToyRobot
             public const string Report = "REPORT";
             public const string Move = "MOVE";
         }
+
+        public static readonly string[] ValidSingleWordCommands = { Commands.Report, Commands.Move, Turns.Left, Turns.Right };
     }
 }

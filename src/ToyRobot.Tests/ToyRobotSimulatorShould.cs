@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ToyRobot.Tests
 {
-    public class ToyRobotSimulatorShould
+    public partial class ToyRobotSimulatorShould
     {
         private ToyRobotSimulator _target;
 
@@ -187,8 +187,7 @@ namespace ToyRobot.Tests
             Assert.Equal(4, _target.Y);
         }
 
-
-
+       
         public static IEnumerable<object[]> TestCases;
 
         static ToyRobotSimulatorShould()
